@@ -1,0 +1,28 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+- script: dir
+- bash: mvn install
+  workingDirectory: ./lab-spring-boot
+- bash: docker build -t secondaks.azurecr.io/testaks:latest .  # add options to this command to meet your needs
+  workingDirectory: ./lab-spring-boot
+- bash: docker login secondaks.azurecr.io -u secondaks -p $(containerPwd)
+  workingDirectory: ./lab-spring-boot
+- bash: sudo docker push secondaks.azurecr.io/testaks:latest
+  workingDirectory: ./lab-spring-boot
